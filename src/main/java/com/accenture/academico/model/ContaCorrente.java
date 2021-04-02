@@ -45,15 +45,15 @@ public class ContaCorrente implements Serializable {
 	@OneToMany(mappedBy = "conta")
 	@JsonManagedReference
 	private List<Extrato> extrato = new ArrayList<>();
-	
-	
+
 	public void transferencia(ContaCorrente a, ContaCorrente b) {
-		
+
 	}
 
 	public void sacar(double value) throws ValorException {
 		if (value > this.saldo) {
-			throw new ValorException("oimeuchapa");
+
+			throw new ValorException("Saldo insuficiente");
 		}
 	}
 }
