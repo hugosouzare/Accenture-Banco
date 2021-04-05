@@ -10,10 +10,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-
-import com.accenture.academico.enums.Operacao;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import lombok.Data;
@@ -31,16 +27,16 @@ public class Extrato  implements Serializable {
 	private Long idExtrato;
 	
 
-	@Temporal(TemporalType.TIMESTAMP)
+	
 	private Date DataHoraMovimento;
 	
-	private Operacao Operacao;
+	private String Operacao;
 	
 
-	@ManyToOne(cascade=CascadeType.PERSIST)
+	@ManyToOne(cascade=CascadeType.MERGE)
 	@JsonBackReference
-	@JoinColumn(name="ID_CONTA", referencedColumnName = "idContaCorrente")
+	@JoinColumn(name="ID_CONTACORRENTE", referencedColumnName = "idContaCorrente")
 	private ContaCorrente conta;
 	
-	
+	private Double valorOperacao;
 }
