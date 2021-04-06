@@ -27,8 +27,6 @@ public class ClienteController {
 	public ResponseEntity<?> insert(@RequestBody @Valid ClienteDTO cliente) {
 		Cliente cli = service.fromDTO(cliente);
         service.salvarCliente(cli);
-       List<String> collect = cli.getAgencia().getCliente().stream().map(c -> c.getNome()).collect(Collectors.toList());
-        System.out.println(collect);
         return ResponseEntity.ok().body(cli);
 	}
 	
