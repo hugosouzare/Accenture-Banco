@@ -16,6 +16,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import lombok.Data;
@@ -44,10 +46,11 @@ public class ContaCorrente implements Serializable {
 
 	@ManyToOne(cascade = CascadeType.MERGE)
 	@JoinColumn(name = "ID_Cliente", referencedColumnName = "id")
+	@JsonBackReference
 	private Cliente cliente;
 
-	@OneToMany(mappedBy = "conta", cascade = CascadeType.MERGE)
-	@JsonManagedReference
+	@OneToMany(mappedBy = "conta", cascade = CascadeType.PERSIST)
+    @JsonManagedReference
 	private List<Extrato> extrato = new ArrayList<>();
 
 

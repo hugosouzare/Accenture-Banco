@@ -50,7 +50,7 @@ public class AcademicoApplication implements CommandLineRunner {
 		
 		Cliente cli = new Cliente();
 		cli.setAgencia(ag);
-		cli.setCpf("10322211134");
+		cli.setCpf("107.943.854-86");
 		cli.setNome("Jose Rodrigues");
 		cli.setTelefone("81-98994-3322");
 		

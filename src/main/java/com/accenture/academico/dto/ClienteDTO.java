@@ -3,6 +3,10 @@ package com.accenture.academico.dto;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
+import javax.validation.constraints.Pattern;
+
+import org.hibernate.validator.constraints.br.CPF;
+
 import lombok.Data;
 
 @Data
@@ -15,7 +19,8 @@ public class ClienteDTO implements Serializable {
 	
 	private String nome;
 	
-	private String cpf;
+	@Pattern(regexp="([0-9]{3}[.]?[0-9]{3}[.]?[0-9]{3}-[0-9]{2})|([0-9]{11})")
+ 	private String cpf;
 	
 	private String telefone;
 	

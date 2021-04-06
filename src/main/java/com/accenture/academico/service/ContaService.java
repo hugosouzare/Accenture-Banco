@@ -2,11 +2,17 @@ package com.accenture.academico.service;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpServerErrorException;
 
 import com.accenture.academico.dto.ContaDTO;
+import com.accenture.academico.dto.MensagemDTO;
 import com.accenture.academico.dto.TransferenciaDTO;
 import com.accenture.academico.enums.Operacao;
 import com.accenture.academico.exceptions.CadastroException;
@@ -25,7 +31,7 @@ public class ContaService {
 
 	@Autowired
 	ExtratoService extservice;
-	
+
 	@Autowired
 	ClienteRepository clirepo;
 
@@ -33,6 +39,10 @@ public class ContaService {
 
 		if (conta.getNumero() == null) {
 			throw new CadastroException("Erro ao cadastrar, numero da conta não pode estar vazio");
+		}
+		
+		if(contarepo.findByNumero(conta.getNumero()) != null) {
+			throw new CadastroException("Número da conta ja existe!");
 		}
 		contarepo.save(conta);
 	}
@@ -93,22 +103,52 @@ public class ContaService {
 
 	public ContaCorrente contaFromDTO(ContaDTO conta) throws CadastroException {
 		ContaCorrente cc = new ContaCorrente();
-		
 
-		if(!clirepo.existsById(conta.getIdCliente())) {
+		if (!clirepo.existsById(conta.getIdCliente())) {
 			throw new TransferenciaException("CONTA NÃO CADASTRADA! Cliente não encontrado");
 		}
-		
+
 		Cliente cli = clirepo.findById(conta.getIdCliente()).orElseThrow();
-		
+
 		cc.setAgencia("0" + cli.getAgencia().getIdAgencia().toString());
 		cc.setNumero(conta.getContaNumero());
 		cc.setSaldo(conta.getSaldo());
 		cc.setCliente(cli);
-		
+
 		cli.getContacorrente().add(cc);
-		
-		
+
 		return cc;
+	}
+
+	public ContaCorrente buscaContaID(String val) {
+
+		Long id = Long.parseLong(val);
+		ContaCorrente conta = contarepo.findById(id).orElseThrow();
+
+		return conta;
+	}
+
+	public void atualizaSaldo(ContaCorrente conta, BigDecimal valor) {
+		conta.setSaldo(valor);
+	}
+
+	public List<Extrato> extratosConta(String id) {
+		Long id1 = Long.parseLong(id);
+		List<Extrato> extratos = contarepo.getExtratosConta(id1);
+		return extratos;
+	}
+
+	public MensagemDTO mensagemTransferenciaOK(TransferenciaDTO transf) {
+		Calendar cal = new GregorianCalendar();
+		ContaCorrente cli = contarepo.findById(transf.getIdConta()).orElseThrow();
+
+		ContaCorrente contadestino = contarepo.getContaTransferencia(transf.getContaDestino(),
+				transf.getAgenciaDestino());
+		String mensagem = "Transferência enviada com sucesso!";
+
+		MensagemDTO msg = new MensagemDTO(HttpStatus.OK.value(), mensagem, transf.getValor(), cal.getTime(),
+				cli.getCliente().getNome(), contadestino.getCliente().getNome());
+		
+		return msg;
 	}
 }

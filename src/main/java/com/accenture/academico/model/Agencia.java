@@ -4,11 +4,15 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.Data;
 
 @Data
@@ -28,6 +32,7 @@ public class Agencia  implements Serializable {
 
 	private String telefone;
 	
-	@OneToMany(mappedBy = "agencia")
+	@OneToMany(mappedBy = "agencia", cascade=CascadeType.MERGE)
+	@JsonIgnore
 	private List<Cliente> cliente = new ArrayList<>();
 }
