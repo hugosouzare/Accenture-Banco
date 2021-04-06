@@ -1,6 +1,7 @@
 package com.accenture.academico.model;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 import javax.persistence.CascadeType;
@@ -10,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import lombok.Data;
@@ -28,9 +30,9 @@ public class Extrato  implements Serializable {
 	
 
 	
-	private Date DataHoraMovimento;
+	private Date dataHoraMovimento;
 	
-	private String Operacao;
+	private String operacao;
 	
 
 	@ManyToOne(cascade=CascadeType.MERGE)
@@ -38,5 +40,5 @@ public class Extrato  implements Serializable {
 	@JoinColumn(name="ID_CONTACORRENTE", referencedColumnName = "idContaCorrente")
 	private ContaCorrente conta;
 	
-	private Double valorOperacao;
+	private BigDecimal valorOperacao = new BigDecimal(0);
 }

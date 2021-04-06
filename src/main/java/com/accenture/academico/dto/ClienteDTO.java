@@ -1,6 +1,7 @@
 package com.accenture.academico.dto;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 import lombok.Data;
 
@@ -20,7 +21,7 @@ public class ClienteDTO implements Serializable {
 	
 	private String numeroConta;
 	
-	private double saldo;
+	private BigDecimal saldo = new BigDecimal(0);
 	
 	
 }

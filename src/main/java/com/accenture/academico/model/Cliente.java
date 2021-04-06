@@ -1,6 +1,8 @@
 package com.accenture.academico.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -9,7 +11,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
+import javax.persistence.OneToMany;
+
 import lombok.Data;
 
 @Data
@@ -39,7 +42,7 @@ public class Cliente  implements Serializable {
 	@JoinColumn(name="ID_AGENCIA", referencedColumnName = "idAgencia")
 	private Agencia agencia;
 	
-	@OneToOne(mappedBy = "cliente", cascade=CascadeType.PERSIST)
-	private ContaCorrente contacorrente;
+	@OneToMany(mappedBy = "cliente", cascade=CascadeType.MERGE)
+	private List<ContaCorrente> contacorrente = new ArrayList<>();
 	
 }

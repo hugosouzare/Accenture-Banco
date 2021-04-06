@@ -1,6 +1,7 @@
 package com.accenture.academico.model;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,8 +11,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 
@@ -39,9 +40,9 @@ public class ContaCorrente implements Serializable {
 	@NotBlank
 	private String numero;
 
-	private double saldo;
+	private BigDecimal saldo = new BigDecimal(0);
 
-	@OneToOne
+	@ManyToOne(cascade = CascadeType.MERGE)
 	@JoinColumn(name = "ID_Cliente", referencedColumnName = "id")
 	private Cliente cliente;
 

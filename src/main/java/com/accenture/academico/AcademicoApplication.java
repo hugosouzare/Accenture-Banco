@@ -1,5 +1,6 @@
 package com.accenture.academico;
 
+import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
@@ -53,15 +54,14 @@ public class AcademicoApplication implements CommandLineRunner {
 		cli.setNome("Jose Rodrigues");
 		cli.setTelefone("81-98994-3322");
 		
-			
+		BigDecimal bd = new BigDecimal(1000);
 		cc.setCliente(cli);
 		cc.setNumero("8199832");
 		cc.setAgencia(cli.getAgencia().getNomeAgencia());
 		cc.setNumero("3455-0");
-		cc.setSaldo((float) 10000);
+		cc.setSaldo(bd);
 		
-		cli.setContacorrente(cc);
-
+		cli.getContacorrente().add(cc);
 		
 		agrepo.save(ag);
 		clirepo.save(cli);

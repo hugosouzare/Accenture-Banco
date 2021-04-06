@@ -1,11 +1,13 @@
 package com.accenture.academico.dto;
 
+import java.math.BigDecimal;
+
 public class TransferenciaDTO {
 
 	private Long idConta;
 	private String contaDestino;
 	private String agenciaDestino;
-	private double valor;
+	private BigDecimal valor = new BigDecimal(0);
 
 	public Long getIdConta() {
 		return idConta;
@@ -31,15 +33,15 @@ public class TransferenciaDTO {
 		this.agenciaDestino = agenciaDestino;
 	}
 	
-	public double getValor() {
+	public BigDecimal getValor() {
 		return valor;
 	}
 
-	public void setValor(double valor) {
+	public void setValor(BigDecimal valor) {
 		this.valor = valor;
 	}
 
-	public TransferenciaDTO(Long idConta, String contaDestino, String agenciaDestino, double valor) {
+	public TransferenciaDTO(Long idConta, String contaDestino, String agenciaDestino, BigDecimal valor) {
 		super();
 		this.idConta = idConta;
 		this.contaDestino = contaDestino;

@@ -1,14 +1,20 @@
 package com.accenture.academico.service;
 
+import java.math.BigDecimal;
+import java.math.MathContext;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.accenture.academico.dto.ContaDTO;
 import com.accenture.academico.dto.TransferenciaDTO;
 import com.accenture.academico.enums.Operacao;
 import com.accenture.academico.exceptions.CadastroException;
 import com.accenture.academico.exceptions.TransferenciaException;
+import com.accenture.academico.model.Cliente;
 import com.accenture.academico.model.ContaCorrente;
 import com.accenture.academico.model.Extrato;
+import com.accenture.academico.repository.ClienteRepository;
 import com.accenture.academico.repository.ContaCorrenteRepository;
 
 @Service
@@ -20,6 +26,9 @@ public class ContaService {
 	@Autowired
 	ExtratoService extservice;
 	
+	@Autowired
+	ClienteRepository clirepo;
+
 	public void cadastroConta(ContaCorrente conta) throws CadastroException {
 
 		if (conta.getNumero() == null) {
@@ -30,52 +39,76 @@ public class ContaService {
 
 	public void transferencia(TransferenciaDTO transf) throws TransferenciaException {
 
+		BigDecimal c = new BigDecimal(0);
+
 		if (!contarepo.existsById(transf.getIdConta())) {
 			throw new TransferenciaException("ID Da conta de origem não existe no banco de dados");
 		}
-		
+
 		ContaCorrente cc = contarepo.findById(transf.getIdConta()).orElseThrow();
-		
+
 		if (transf.getContaDestino() == null) {
 			throw new TransferenciaException("CAMPO OBRIGATÓRIO: contaDestino");
 		}
-		
+
 		if (transf.getAgenciaDestino() == null) {
 			throw new TransferenciaException("CAMPO OBRIGATÓRIO: agenciaDestino");
 		}
-		ContaCorrente contadestino =  contarepo.getContaTransferencia(transf.getContaDestino(), transf.getAgenciaDestino());
-		
+		ContaCorrente contadestino = contarepo.getContaTransferencia(transf.getContaDestino(),
+				transf.getAgenciaDestino());
+
 		if (contadestino == null) {
-			throw new TransferenciaException("A conta destino não foi encontrada, favor informe os parametros corretos");
+			throw new TransferenciaException(
+					"A conta destino não foi encontrada, favor informe os parametros corretos");
 		}
-		
-		if (transf.getValor() > cc.getSaldo()) {
-			throw new TransferenciaException("TRANSFERÊNCIA NÃO REALIZADA! Valor da transferência excede o saldo da conta de origem");
+
+		if (transf.getValor().compareTo(cc.getSaldo()) == 1) {
+			throw new TransferenciaException(
+					"TRANSFERÊNCIA NÃO REALIZADA! Valor da transferência excede o saldo da conta de origem");
 		}
-		
-		if (transf.getValor() <= 0) {
+
+		if (transf.getValor().compareTo(c) <= 0) {
 			throw new TransferenciaException("Valor da transferência precisa ser maior que 0");
 		}
-		
-		cc.setSaldo(cc.getSaldo()-transf.getValor());
-		contadestino.setSaldo(contadestino.getSaldo()+transf.getValor());
-		
-		
+
+		cc.setSaldo(cc.getSaldo().add(transf.getValor()));
+		contadestino.setSaldo(contadestino.getSaldo().add(transf.getValor(), MathContext.DECIMAL32));
+
 		Extrato ext1 = new Extrato();
 		ext1.setConta(cc);
 		ext1.setDataHoraMovimento(null);
 		ext1.setOperacao(Operacao.TRANSFERENCIAENVIADA.getDescricao());
-		ext1.setValorOperacao(-transf.getValor());
-		
-		
+		ext1.setValorOperacao(ext1.getValorOperacao().subtract(transf.getValor()));
+
 		Extrato ext2 = new Extrato();
 		ext2.setConta(contadestino);
 		ext2.setDataHoraMovimento(null);
 		ext2.setOperacao(Operacao.TRANSFERENCIARECEBIDA.getDescricao());
 		ext2.setValorOperacao(transf.getValor());
-		
+
 		extservice.salvarExtrato(ext1);
 		extservice.salvarExtrato(ext2);
+
+	}
+
+	public ContaCorrente contaFromDTO(ContaDTO conta) throws CadastroException {
+		ContaCorrente cc = new ContaCorrente();
 		
+
+		if(!clirepo.existsById(conta.getIdCliente())) {
+			throw new TransferenciaException("CONTA NÃO CADASTRADA! Cliente não encontrado");
+		}
+		
+		Cliente cli = clirepo.findById(conta.getIdCliente()).orElseThrow();
+		
+		cc.setAgencia("0" + cli.getAgencia().getIdAgencia().toString());
+		cc.setNumero(conta.getContaNumero());
+		cc.setSaldo(conta.getSaldo());
+		cc.setCliente(cli);
+		
+		cli.getContacorrente().add(cc);
+		
+		
+		return cc;
 	}
 }

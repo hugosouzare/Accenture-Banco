@@ -53,7 +53,7 @@ public class ClienteService {
 		
 
 		clienteRepository.save(cliente);
-		ccRepository.save(cliente.getContacorrente());
+		ccRepository.saveAll(cliente.getContacorrente());
 	}
 
 	public Cliente fromDTO(ClienteDTO cliente) {
@@ -68,7 +68,7 @@ public class ClienteService {
 		cc.setAgencia("0" + ag.getIdAgencia().toString());
 		cc.setSaldo(cliente.getSaldo());
 
-		cli.setContacorrente(cc);
+		cli.getContacorrente().add(cc);
 
 		ag.getCliente().add(cli);
 		cc.setCliente(cli);

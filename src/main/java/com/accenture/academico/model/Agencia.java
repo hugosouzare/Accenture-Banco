@@ -22,11 +22,11 @@ public class Agencia  implements Serializable {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long idAgencia;
 
-	private String NomeAgencia;
+	private String nomeAgencia;
 
-	private String Endereco;
+	private String endereco;
 
-	private String Telefone;
+	private String telefone;
 	
 	@OneToMany(mappedBy = "agencia")
 	private List<Cliente> cliente = new ArrayList<>();
