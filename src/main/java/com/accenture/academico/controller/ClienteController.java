@@ -7,6 +7,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,13 +17,19 @@ import com.accenture.academico.dto.ClienteDTO;
 import com.accenture.academico.model.Cliente;
 import com.accenture.academico.service.ClienteService;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping(value = "/cliente")
+@Api(value="Operações envolvendo cliente")
 public class ClienteController {
 
 	@Autowired
 	ClienteService service;
 
+	@ApiOperation(value="Cadastra um cliente")
 	@PostMapping(value = "/criarcliente")
 	public ResponseEntity<?> insert(@RequestBody @Valid ClienteDTO cliente) {
 		Cliente cli = service.fromDTO(cliente);
