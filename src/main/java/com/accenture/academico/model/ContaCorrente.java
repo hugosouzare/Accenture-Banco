@@ -48,7 +48,7 @@ public class ContaCorrente implements Serializable {
 	@JsonBackReference
 	private Cliente cliente;
 
-	@OneToMany(mappedBy = "conta", cascade = CascadeType.PERSIST)
+	@OneToMany(mappedBy = "conta", cascade = CascadeType.PERSIST, orphanRemoval = true)
     @JsonManagedReference
 	private List<Extrato> extrato = new ArrayList<>();
 

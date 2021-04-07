@@ -5,8 +5,6 @@ import java.math.BigDecimal;
 
 import javax.validation.constraints.Pattern;
 
-import org.hibernate.validator.constraints.br.CPF;
-
 import lombok.Data;
 
 @Data

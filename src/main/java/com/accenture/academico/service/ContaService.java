@@ -9,14 +9,16 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpServerErrorException;
 
 import com.accenture.academico.dto.ContaDTO;
 import com.accenture.academico.dto.MensagemDTO;
+import com.accenture.academico.dto.OperacaoDTO;
+import com.accenture.academico.dto.OperacaoSucedidaDTO;
 import com.accenture.academico.dto.TransferenciaDTO;
 import com.accenture.academico.enums.Operacao;
 import com.accenture.academico.exceptions.CadastroException;
 import com.accenture.academico.exceptions.TransferenciaException;
+import com.accenture.academico.exceptions.ValorException;
 import com.accenture.academico.model.Cliente;
 import com.accenture.academico.model.ContaCorrente;
 import com.accenture.academico.model.Extrato;
@@ -40,8 +42,8 @@ public class ContaService {
 		if (conta.getNumero() == null) {
 			throw new CadastroException("Erro ao cadastrar, numero da conta não pode estar vazio");
 		}
-		
-		if(contarepo.findByNumero(conta.getNumero()) != null) {
+
+		if (contarepo.findByNumero(conta.getNumero()) != null) {
 			throw new CadastroException("Número da conta ja existe!");
 		}
 		contarepo.save(conta);
@@ -148,7 +150,43 @@ public class ContaService {
 
 		MensagemDTO msg = new MensagemDTO(HttpStatus.OK.value(), mensagem, transf.getValor(), cal.getTime(),
 				cli.getCliente().getNome(), contadestino.getCliente().getNome());
-		
+
+		return msg;
+	}
+
+	public OperacaoSucedidaDTO operacao(OperacaoDTO dto) throws ValorException {
+		ContaCorrente cc = contarepo.findById(dto.getContaId()).orElseThrow();
+		Extrato ext = new Extrato();
+
+		ext.setOperacao(Operacao.toEnum(dto.getOperacao()).getDescricao());
+		ext.setValorOperacao(dto.getValor());
+
+		ext.setConta(cc);
+
+		Calendar cal = new GregorianCalendar();
+
+		switch (dto.getOperacao()) {
+		case 1:
+			if (dto.getValor().compareTo(cc.getSaldo()) == 1) {
+				throw new ValorException("ERRO! Valor do saque excede o saldo da conta");
+			}
+			cc.setSaldo(cc.getSaldo().subtract(dto.getValor()));
+
+			break;
+		case 2:
+			cc.setSaldo(cc.getSaldo().add(dto.getValor()));
+			break;
+		default:
+			throw new ValorException("OPERAÇÃO INVÁLIDA! 1 para saque e 2 para depósito");
+
+		}
+
+		extservice.salvarExtrato(ext);
+
+		String mssg = Operacao.toEnum(dto.getOperacao()).getDescricao() + " realizado com sucesso!";
+
+		OperacaoSucedidaDTO msg = new OperacaoSucedidaDTO(HttpStatus.OK.value(), mssg, cal.getTime(), dto.getValor(),
+				cc.getSaldo());
 		return msg;
 	}
 }

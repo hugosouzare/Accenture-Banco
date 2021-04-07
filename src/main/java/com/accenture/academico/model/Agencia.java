@@ -32,7 +32,7 @@ public class Agencia  implements Serializable {
 
 	private String telefone;
 	
-	@OneToMany(mappedBy = "agencia", cascade=CascadeType.MERGE)
+	@OneToMany(mappedBy = "agencia", cascade=CascadeType.MERGE, orphanRemoval = true)
 	@JsonIgnore
 	private List<Cliente> cliente = new ArrayList<>();
 }

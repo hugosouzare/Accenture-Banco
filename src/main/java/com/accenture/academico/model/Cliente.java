@@ -47,7 +47,7 @@ public class Cliente  implements Serializable {
 	@JsonIgnore
 	private Agencia agencia;
 	
-	@OneToMany(mappedBy = "cliente", cascade=CascadeType.PERSIST)
+	@OneToMany(mappedBy = "cliente", cascade=CascadeType.PERSIST, orphanRemoval = true)
 	@JsonManagedReference
 	private List<ContaCorrente> contacorrente = new ArrayList<>();
 	

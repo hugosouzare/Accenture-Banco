@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.accenture.academico.dto.ClienteDTO;
+import com.accenture.academico.dto.DeleteDTO;
 import com.accenture.academico.dto.MensagemDTO;
 import com.accenture.academico.exceptions.CadastroException;
 import com.accenture.academico.model.Agencia;
@@ -85,5 +86,22 @@ public class ClienteService {
 		String msg = "Cliente cadastrado com sucesso!";
 		MensagemDTO mensagem = new MensagemDTO(HttpStatus.OK.value(), msg, cal.getTime());
 		return mensagem;
+	}
+	
+	public DeleteDTO delete(String id) {
+		Long id1 = Long.parseLong(id);
+		Calendar cal = new GregorianCalendar();
+		
+		Cliente cli = clienteRepository.findById(id1).orElseThrow();
+		
+		
+		String msg = "Cliente " + cli.getNome() + " deletado com sucesso!";
+		
+	    DeleteDTO dto = new DeleteDTO(HttpStatus.OK.value(), msg, cal.getTime());
+	    
+	    
+	    clienteRepository.deleteById(id1);
+	    
+	    return dto;
 	}
 }
