@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.accenture.academico.dto.ContaDTO;
 import com.accenture.academico.dto.MensagemDTO;
 import com.accenture.academico.dto.OperacaoDTO;
@@ -70,7 +69,7 @@ public class ContaController {
 
 	}
 
-	@ApiOperation(value = "Deposita ou saca dinheiro de uma conta de acordo com o parametro passado")
+	@ApiOperation(value = "Deposita ou saca dinheiro de uma conta de acordo com o parametro passado. 1 = Saque 2 = Depósito")
 	@PostMapping(value = "/operacao")
 	public ResponseEntity<?> operacao(@RequestBody OperacaoDTO dto) {
 		OperacaoSucedidaDTO oper = service.operacao(dto);

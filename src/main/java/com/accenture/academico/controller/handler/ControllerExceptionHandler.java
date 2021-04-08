@@ -13,7 +13,7 @@ public class ControllerExceptionHandler {
 	   @ExceptionHandler(RuntimeException.class)
 	   public ResponseEntity<StandardError> cadastroException(RuntimeException c, HttpServletRequest request) {
 		
-		StandardError e = new StandardError(HttpStatus.NOT_FOUND.value(), c.getMessage(), System.currentTimeMillis());
-		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e);
+		StandardError e = new StandardError(HttpStatus.BAD_REQUEST.value(), c.getMessage(), System.currentTimeMillis());
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e);
 	}
 }

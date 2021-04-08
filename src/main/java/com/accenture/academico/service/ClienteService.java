@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.accenture.academico.dto.ClienteDTO;
 import com.accenture.academico.dto.DeleteDTO;
+import com.accenture.academico.dto.GetClienteDTO;
 import com.accenture.academico.dto.MensagemDTO;
 import com.accenture.academico.exceptions.CadastroException;
 import com.accenture.academico.model.Agencia;
@@ -52,14 +53,19 @@ public class ClienteService {
 			throw new CadastroException("Erro ao cadastrar, nome não pode estar vazio");
 		}
 
-		
+	
 		
 
 		clienteRepository.save(cliente);
 		
 	}
 
-	public Cliente fromDTO(ClienteDTO cliente) {
+	public Cliente fromDTO(ClienteDTO cliente) throws CadastroException {
+		
+		if (ccRepository.findByNumero(cliente.getNumeroConta()) != null) {
+			throw new CadastroException("Número da conta ja existe!");
+		}
+		
 		Cliente cli = new Cliente();
 		cli.setCpf(cliente.getCpf());
 		cli.setNome(cliente.getNome());
@@ -103,5 +109,17 @@ public class ClienteService {
 	    clienteRepository.deleteById(id1);
 	    
 	    return dto;
+	}
+	
+	public GetClienteDTO buscaCliente(String id) throws CadastroException {
+		Long id1 = Long.parseLong(id);
+		Cliente cli = clienteRepository.findById(id1).orElse(null);
+		
+		if (cli == null) {
+			throw new CadastroException("Cliente não encontrado");
+		}
+		
+		GetClienteDTO getcli = new GetClienteDTO(cli.getNome(), cli.getCpf(), cli.getTelefone(), cli.getAgencia().getNomeAgencia(), cli.getAgencia().getTelefone());
+		return getcli;
 	}
 }
