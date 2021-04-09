@@ -6,9 +6,9 @@ Projeto de uma API de um banco com algumas operações básicas, feita em Java.
 
 Link para o projeto no Heroku + Swagger
 
-https://accenture-banco.herokuapp.com/
+https://banco-accenture.herokuapp.com/
 
-https://accenture-banco.herokuapp.com/swagger-ui.html
+https://banco-accenture.herokuapp.com/swagger-ui.html
 
 Link para o projeto no Apigee + Swagger
 
