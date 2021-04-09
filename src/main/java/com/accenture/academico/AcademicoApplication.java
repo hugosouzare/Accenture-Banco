@@ -66,7 +66,7 @@ public class AcademicoApplication implements CommandLineRunner {
 		cc.setCliente(cli);
 		cc.setNumero("8199832");
 		cc.setAgencia("01");
-		cc.setNumero("34550");
+		cc.setNumero("3455-0");
 		cc.setSaldo(bd);
 		
 		cli.getContacorrente().add(cc);
