@@ -83,7 +83,7 @@ public class ContaService {
 			throw new TransferenciaException("Valor da transferência precisa ser maior que 0");
 		}
 
-		cc.setSaldo(cc.getSaldo().add(transf.getValor()));
+		cc.setSaldo(cc.getSaldo().subtract(transf.getValor()));
 		contadestino.setSaldo(contadestino.getSaldo().add(transf.getValor(), MathContext.DECIMAL32));
 
 		Extrato ext1 = new Extrato();
