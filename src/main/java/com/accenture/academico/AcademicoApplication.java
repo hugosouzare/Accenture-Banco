@@ -18,25 +18,24 @@ import com.accenture.academico.repository.ContaCorrenteRepository;
 import com.accenture.academico.repository.ExtratoRepository;
 
 @SpringBootApplication
-@ComponentScan(basePackages = "com.*")
 public class AcademicoApplication implements CommandLineRunner {
 
 	@Autowired
 	AgenciaRepository agrepo;
-	
+
 	@Autowired
 	ClienteRepository clirepo;
-	
+
 	@Autowired
 	ContaCorrenteRepository ccrepo;
-	
+
 	@Autowired
 	ExtratoRepository extrepo;
-	
+
 	public static void main(String[] args) {
 		SpringApplication.run(AcademicoApplication.class, args);
 	}
-
+	
 	@Override
 	public void run(String... args) throws Exception {
 		
@@ -78,5 +77,6 @@ public class AcademicoApplication implements CommandLineRunner {
 		ccrepo.save(cc);
 
 	}
+
 
 }

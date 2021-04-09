@@ -1,11 +1,17 @@
 package com.accenture.academico.service;
 
-import com.accenture.academico.exceptions.CadastroException;
-import com.accenture.academico.model.Agencia;
-import com.accenture.academico.repository.AgenciaRepository;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+
+import com.accenture.academico.dto.DeleteDTO;
+import com.accenture.academico.exceptions.CadastroException;
+import com.accenture.academico.model.Agencia;
+import com.accenture.academico.model.Cliente;
+import com.accenture.academico.repository.AgenciaRepository;
 
 @Service
 public class AgenciaService {
@@ -29,4 +35,37 @@ public class AgenciaService {
     	
         agenciaRepository.save(agencia);
     }
+    
+    public Agencia buscaAgencia(String id) throws CadastroException {
+    	Long id1 = Long.parseLong(id);
+    	
+    	Agencia ag = agenciaRepository.findById(id1).orElse(null);
+    	
+    	if (ag == null) {
+    		throw new CadastroException("Agência não encontrada no nosso banco de dados");
+    	
+    	}
+    	
+		return ag;
+    }
+    
+    public DeleteDTO delete(String id) {
+		Long id1 = Long.parseLong(id);
+		Calendar cal = new GregorianCalendar();
+		
+		Agencia ag = agenciaRepository.findById(id1).orElse(null);
+		
+		if (ag == null) {
+			throw new CadastroException("Agência não encontrada!");
+		}
+		
+		String msg = "Agencia " + ag.getNomeAgencia() + " deletada com sucesso!";
+		
+	    DeleteDTO dto = new DeleteDTO(HttpStatus.OK.value(), msg, cal.getTime());
+	    
+	    
+	    agenciaRepository.deleteById(id1);
+	    
+	    return dto;
+	}
 }

@@ -94,11 +94,15 @@ public class ClienteService {
 		return mensagem;
 	}
 	
-	public DeleteDTO delete(String id) {
+	public DeleteDTO delete(String id) throws CadastroException {
 		Long id1 = Long.parseLong(id);
 		Calendar cal = new GregorianCalendar();
 		
-		Cliente cli = clienteRepository.findById(id1).orElseThrow();
+		Cliente cli = clienteRepository.findById(id1).orElse(null);
+		
+		if (cli == null) {
+			throw new CadastroException("Cliente não encontrado!");
+		}
 		
 		
 		String msg = "Cliente " + cli.getNome() + " deletado com sucesso!";
