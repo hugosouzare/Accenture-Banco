@@ -12,6 +12,6 @@ https://banco-accenture.herokuapp.com/swagger-ui.html
 
 Link para o projeto no Apigee + Swagger
 
-https://hugoregos-eval-test.apigee.net/projetobanco/
+	http://hugoregos-eval-test.apigee.net/banco-accenture
 
-https://hugoregos-eval-test.apigee.net/projetobanco/swagger-ui.html
+	http://hugoregos-eval-test.apigee.net/banco-accenture/swagger-ui.html
